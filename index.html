@@ -1,142 +1,191 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROGNOZ</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>PROGNOZ</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0b0d10;
-            color: #fff;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        header {
-            padding: 25px;
-            text-align: center;
-            border-bottom: 1px solid #242830;
-        }
+body {
+    margin: 0;
+    background: #0b0d10;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
 
-        h1 {
-            margin: 0;
-            font-size: 32px;
-        }
+header {
+    padding: 25px 15px;
+    text-align: center;
+    border-bottom: 1px solid #252932;
+}
 
-        .date {
-            margin-top: 8px;
-            color: #8f96a3;
-        }
+.logo {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
 
-        .container {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 15px;
-        }
+.subtitle {
+    margin-top: 8px;
+    color: #8d94a0;
+    font-size: 14px;
+}
 
-        .league {
-            margin-bottom: 30px;
-        }
+.container {
+    max-width: 1000px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
 
-        .league-title {
-            font-size: 20px;
-            font-weight: bold;
-            padding: 14px;
-            background: #171a20;
-            border-radius: 10px 10px 0 0;
-        }
+.league {
+    margin-bottom: 30px;
+}
 
-        .match {
-            background: #111419;
-            border: 1px solid #242830;
-            padding: 18px;
-            margin-bottom: 8px;
-            border-radius: 10px;
-        }
+.league-title {
+    background: #171a20;
+    border: 1px solid #252932;
+    padding: 14px 16px;
+    border-radius: 10px 10px 0 0;
+    font-size: 18px;
+    font-weight: bold;
+}
 
-        .teams {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
+.match {
+    background: #111419;
+    border: 1px solid #252932;
+    border-top: none;
+    padding: 18px;
+}
 
-        .team {
-            font-size: 17px;
-            font-weight: bold;
-            width: 40%;
-        }
+.match:last-child {
+    border-radius: 0 0 10px 10px;
+}
 
-        .away {
-            text-align: right;
-        }
+.match-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
 
-        .time {
-            color: #8f96a3;
-            white-space: nowrap;
-        }
+.team {
+    width: 40%;
+    font-size: 17px;
+    font-weight: bold;
+}
 
-        .odds {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
+.away {
+    text-align: right;
+}
 
-        .odd {
-            background: #1b1f26;
-            padding: 9px 12px;
-            border-radius: 7px;
-            font-size: 13px;
-        }
+.time {
+    color: #9299a5;
+    font-size: 14px;
+    white-space: nowrap;
+}
 
-        .odd span {
-            color: #8f96a3;
-            margin-right: 5px;
-        }
+.markets {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
 
-        .loading,
-        .error,
-        .empty {
-            text-align: center;
-            padding: 50px 20px;
-            color: #8f96a3;
-        }
+.market {
+    background: #191d24;
+    border-radius: 8px;
+    padding: 12px;
+}
 
-        @media (max-width: 600px) {
-            .teams {
-                flex-direction: column;
-                align-items: stretch;
-            }
+.market-name {
+    color: #aeb4bf;
+    font-size: 13px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 
-            .team,
-            .away {
-                width: 100%;
-                text-align: center;
-            }
+.selections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
 
-            .time {
-                text-align: center;
-            }
-        }
-    </style>
+.selection {
+    background: #242932;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.selection-name {
+    color: #c3c8d0;
+    margin-right: 5px;
+}
+
+.selection-odd {
+    font-weight: bold;
+}
+
+.loading,
+.error,
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #8d94a0;
+}
+
+@media (max-width: 600px) {
+
+    .match-info {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .team {
+        width: 100%;
+        text-align: center;
+    }
+
+    .away {
+        text-align: center;
+    }
+
+    .markets {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
 </head>
 
 <body>
 
 <header>
-    <h1>PROGNOZ</h1>
-    <div class="date" id="date">Yüklənir...</div>
+
+    <div class="logo">
+        PROGNOZ
+    </div>
+
+    <div class="subtitle" id="date">
+        Oyunlar yüklənir...
+    </div>
+
 </header>
 
+
 <div class="container" id="matches">
-    <div class="loading">Oyunlar yüklənir...</div>
+
+    <div class="loading">
+        Oyunlar yüklənir...
+    </div>
+
 </div>
+
 
 <script>
 
@@ -149,121 +198,216 @@ async function loadMatches() {
         const response = await fetch("./data.json");
 
         if (!response.ok) {
-            throw new Error("data.json tapılmadı");
+            throw new Error("data.json yüklənmədi");
         }
 
         const data = await response.json();
 
+        const matches = data.matches || [];
+
         document.getElementById("date").textContent =
-            data.date + " • " + data.match_count + " oyun";
+            `${matches.length} oyun`;
 
-        if (!data.matches || data.matches.length === 0) {
+        if (matches.length === 0) {
 
-            container.innerHTML =
-                '<div class="empty">Bu tarix üçün oyun yoxdur.</div>';
+            container.innerHTML = `
+                <div class="empty">
+                    Bu tarix üçün oyun yoxdur.
+                </div>
+            `;
 
             return;
         }
 
+
+        /*
+         * Oyunları liqalara bölürük
+         */
+
         const leagues = {};
 
-        data.matches.forEach(match => {
+        matches.forEach(match => {
 
-            if (!leagues[match.league]) {
-                leagues[match.league] = [];
+            const league = match.league || "Digər";
+
+            if (!leagues[league]) {
+                leagues[league] = [];
             }
 
-            leagues[match.league].push(match);
+            leagues[league].push(match);
 
         });
+
 
         container.innerHTML = "";
 
-        Object.keys(leagues).forEach(leagueName => {
 
-            const leagueDiv = document.createElement("div");
+        /*
+         * Hər liqanı göstəririk
+         */
 
-            leagueDiv.className = "league";
+        Object.entries(leagues).forEach(
+            ([leagueName, leagueMatches]) => {
 
-            leagueDiv.innerHTML = `
-                <div class="league-title">
-                    ${leagueName}
-                </div>
-            `;
+                const leagueDiv = document.createElement("div");
 
-            leagues[leagueName].forEach(match => {
+                leagueDiv.className = "league";
 
-                const matchDiv = document.createElement("div");
 
-                matchDiv.className = "match";
-
-                const date = new Date(match.kickoff);
-
-                const time = date.toLocaleTimeString(
-                    "az-AZ",
-                    {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    }
-                );
-
-                let oddsHTML = "";
-
-                if (match.odds && match.odds.length > 0) {
-
-                    const latest = {};
-
-                    match.odds.forEach(odd => {
-
-                        const key =
-                            odd.market + "|" + odd.selection;
-
-                        latest[key] = odd;
-
-                    });
-
-                    Object.values(latest).forEach(odd => {
-
-                        oddsHTML += `
-                            <div class="odd">
-                                <span>${odd.selection}</span>
-                                <b>${Number(odd.odds).toFixed(2)}</b>
-                            </div>
-                        `;
-
-                    });
-
-                }
-
-                matchDiv.innerHTML = `
-                    <div class="teams">
-
-                        <div class="team">
-                            ${match.home_team}
-                        </div>
-
-                        <div class="time">
-                            ${time}
-                        </div>
-
-                        <div class="team away">
-                            ${match.away_team}
-                        </div>
-
-                    </div>
-
-                    <div class="odds">
-                        ${oddsHTML}
+                leagueDiv.innerHTML = `
+                    <div class="league-title">
+                        ${leagueName}
                     </div>
                 `;
 
-                leagueDiv.appendChild(matchDiv);
 
-            });
+                /*
+                 * Liqadakı oyunlar
+                 */
 
-            container.appendChild(leagueDiv);
+                leagueMatches.forEach(match => {
 
-        });
+                    const matchDiv =
+                        document.createElement("div");
+
+                    matchDiv.className = "match";
+
+
+                    /*
+                     * Saat
+                     */
+
+                    let time = "";
+
+                    if (match.kickoff) {
+
+                        const date =
+                            new Date(match.kickoff);
+
+                        time =
+                            date.toLocaleTimeString(
+                                "az-AZ",
+                                {
+                                    hour: "2-digit",
+                                    minute: "2-digit"
+                                }
+                            );
+
+                    }
+
+
+                    /*
+                     * Marketləri qruplaşdırırıq
+                     */
+
+                    const markets = {};
+
+                    (match.odds || []).forEach(odd => {
+
+                        const marketName =
+                            odd.market || "Digər";
+
+                        if (!markets[marketName]) {
+                            markets[marketName] = [];
+                        }
+
+                        markets[marketName].push(odd);
+
+                    });
+
+
+                    let marketsHTML = "";
+
+
+                    /*
+                     * Market HTML
+                     */
+
+                    Object.entries(markets).forEach(
+                        ([marketName, selections]) => {
+
+                            marketsHTML += `
+                                <div class="market">
+
+                                    <div class="market-name">
+                                        ${marketName}
+                                    </div>
+
+                                    <div class="selections">
+                            `;
+
+
+                            selections.forEach(odd => {
+
+                                marketsHTML += `
+                                    <div class="selection">
+
+                                        <span class="selection-name">
+                                            ${odd.selection}
+                                        </span>
+
+                                        <span class="selection-odd">
+                                            ${Number(odd.odds).toFixed(2)}
+                                        </span>
+
+                                    </div>
+                                `;
+
+                            });
+
+
+                            marketsHTML += `
+                                    </div>
+
+                                </div>
+                            `;
+
+                        }
+                    );
+
+
+                    /*
+                     * Oyunu ekrana əlavə edirik
+                     */
+
+                    matchDiv.innerHTML = `
+
+                        <div class="match-info">
+
+                            <div class="team">
+                                ${match.home_team}
+                            </div>
+
+                            <div class="time">
+                                ${time}
+                            </div>
+
+                            <div class="team away">
+                                ${match.away_team}
+                            </div>
+
+                        </div>
+
+
+                        <div class="markets">
+
+                            ${marketsHTML}
+
+                        </div>
+
+                    `;
+
+
+                    leagueDiv.appendChild(matchDiv);
+
+                });
+
+
+                container.appendChild(leagueDiv);
+
+            }
+        );
+
 
     } catch (error) {
 
@@ -271,12 +415,20 @@ async function loadMatches() {
 
         container.innerHTML = `
             <div class="error">
-                Oyunlar yüklənmədi.<br><br>
+
+                Oyunlar yüklənmədi.
+
+                <br><br>
+
                 ${error.message}
+
             </div>
         `;
+
     }
+
 }
+
 
 loadMatches();
 
