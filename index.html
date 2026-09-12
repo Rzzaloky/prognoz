@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>PROGNOZ</title>
 
 <style>
@@ -14,12 +13,12 @@
 body {
     margin: 0;
     background: #0b0d10;
-    color: #ffffff;
+    color: #fff;
     font-family: Arial, sans-serif;
 }
 
 header {
-    padding: 25px 15px;
+    padding: 25px;
     text-align: center;
     border-bottom: 1px solid #252932;
 }
@@ -33,7 +32,6 @@ header {
 .subtitle {
     margin-top: 8px;
     color: #8d94a0;
-    font-size: 14px;
 }
 
 .container {
@@ -85,7 +83,6 @@ header {
 
 .time {
     color: #9299a5;
-    font-size: 14px;
     white-space: nowrap;
 }
 
@@ -138,54 +135,19 @@ header {
     padding: 60px 20px;
     color: #8d94a0;
 }
-
-@media (max-width: 600px) {
-
-    .match-info {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .team {
-        width: 100%;
-        text-align: center;
-    }
-
-    .away {
-        text-align: center;
-    }
-
-    .markets {
-        grid-template-columns: 1fr;
-    }
-}
 </style>
-
 </head>
 
 <body>
 
 <header>
-
-    <div class="logo">
-        PROGNOZ
-    </div>
-
-    <div class="subtitle" id="date">
-        Oyunlar yüklənir...
-    </div>
-
+    <div class="logo">PROGNOZ</div>
+    <div class="subtitle" id="date">Oyunlar yüklənir...</div>
 </header>
 
-
 <div class="container" id="matches">
-
-    <div class="loading">
-        Oyunlar yüklənir...
-    </div>
-
+    <div class="loading">Oyunlar yüklənir...</div>
 </div>
-
 
 <script>
 
@@ -202,23 +164,16 @@ async function loadMatches() {
         }
 
         const data = await response.json();
-
         const matches = data.matches || [];
 
         document.getElementById("date").textContent =
-            `${matches.length} oyun`;
+            matches.length + " oyun";
 
         if (matches.length === 0) {
-
-            container.innerHTML = `
-                <div class="empty">
-                    Bu tarix üçün oyun yoxdur.
-                </div>
-            `;
-
+            container.innerHTML =
+                '<div class="empty">Bu tarix üçün oyun yoxdur.</div>';
             return;
         }
-
 
         /*
          * Oyunları liqalara bölürük
@@ -238,21 +193,19 @@ async function loadMatches() {
 
         });
 
-
         container.innerHTML = "";
 
-
         /*
-         * Hər liqanı göstəririk
+         * Liqaları göstəririk
          */
 
         Object.entries(leagues).forEach(
             ([leagueName, leagueMatches]) => {
 
-                const leagueDiv = document.createElement("div");
+                const leagueDiv =
+                    document.createElement("div");
 
                 leagueDiv.className = "league";
-
 
                 leagueDiv.innerHTML = `
                     <div class="league-title">
@@ -260,9 +213,8 @@ async function loadMatches() {
                     </div>
                 `;
 
-
                 /*
-                 * Liqadakı oyunlar
+                 * Oyunları göstəririk
                  */
 
                 leagueMatches.forEach(match => {
@@ -271,11 +223,6 @@ async function loadMatches() {
                         document.createElement("div");
 
                     matchDiv.className = "match";
-
-
-                    /*
-                     * Saat
-                     */
 
                     let time = "";
 
@@ -292,9 +239,7 @@ async function loadMatches() {
                                     minute: "2-digit"
                                 }
                             );
-
                     }
-
 
                     /*
                      * Marketləri qruplaşdırırıq
@@ -304,23 +249,38 @@ async function loadMatches() {
 
                     (match.odds || []).forEach(odd => {
 
-                        const marketName =
+                        const market =
                             odd.market || "Digər";
 
-                        if (!markets[marketName]) {
-                            markets[marketName] = [];
+                        if (!markets[market]) {
+                            markets[market] = {};
                         }
 
-                        markets[marketName].push(odd);
+                        /*
+                         * Eyni selection üçün
+                         * yalnız ən son snapshot qalır.
+                         */
+
+                        const selection =
+                            odd.selection || "";
+
+                        const old =
+                            markets[market][selection];
+
+                        if (
+                            !old ||
+                            String(odd.timestamp || "") >
+                            String(old.timestamp || "")
+                        ) {
+                            markets[market][selection] = odd;
+                        }
 
                     });
 
-
                     let marketsHTML = "";
 
-
                     /*
-                     * Market HTML
+                     * Marketləri HTML-ə çeviririk
                      */
 
                     Object.entries(markets).forEach(
@@ -336,38 +296,36 @@ async function loadMatches() {
                                     <div class="selections">
                             `;
 
+                            Object.values(selections).forEach(
+                                odd => {
 
-                            selections.forEach(odd => {
+                                    marketsHTML += `
+                                        <div class="selection">
 
-                                marketsHTML += `
-                                    <div class="selection">
+                                            <span class="selection-name">
+                                                ${odd.selection}
+                                            </span>
 
-                                        <span class="selection-name">
-                                            ${odd.selection}
-                                        </span>
+                                            <span class="selection-odd">
+                                                ${Number(odd.odds).toFixed(2)}
+                                            </span>
 
-                                        <span class="selection-odd">
-                                            ${Number(odd.odds).toFixed(2)}
-                                        </span>
+                                        </div>
+                                    `;
 
-                                    </div>
-                                `;
-
-                            });
-
+                                }
+                            );
 
                             marketsHTML += `
                                     </div>
-
                                 </div>
                             `;
 
                         }
                     );
 
-
                     /*
-                     * Oyunu ekrana əlavə edirik
+                     * Oyunun özü
                      */
 
                     matchDiv.innerHTML = `
@@ -388,26 +346,20 @@ async function loadMatches() {
 
                         </div>
 
-
                         <div class="markets">
-
                             ${marketsHTML}
-
                         </div>
 
                     `;
-
 
                     leagueDiv.appendChild(matchDiv);
 
                 });
 
-
                 container.appendChild(leagueDiv);
 
             }
         );
-
 
     } catch (error) {
 
@@ -415,20 +367,13 @@ async function loadMatches() {
 
         container.innerHTML = `
             <div class="error">
-
                 Oyunlar yüklənmədi.
-
                 <br><br>
-
                 ${error.message}
-
             </div>
         `;
-
     }
-
 }
-
 
 loadMatches();
 
