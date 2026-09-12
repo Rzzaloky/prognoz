@@ -1,580 +1,286 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PROGNOZ — Futbol Analiz</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROGNOZ</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b0d10;
-      color: #fff;
-      min-height: 100vh;
-    }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0d10;
+            color: #fff;
+        }
 
-    header {
-      height: 72px;
-      border-bottom: 1px solid #20242a;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 6%;
-      background: #0b0d10;
-    }
+        header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #242830;
+        }
 
-    .logo {
-      font-size: 25px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
+        h1 {
+            margin: 0;
+            font-size: 32px;
+        }
 
-    nav {
-      display: flex;
-      gap: 28px;
-    }
+        .date {
+            margin-top: 8px;
+            color: #8f96a3;
+        }
 
-    nav a {
-      color: #9da3ad;
-      text-decoration: none;
-      font-size: 14px;
-    }
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
 
-    nav a:hover {
-      color: white;
-    }
+        .league {
+            margin-bottom: 30px;
+        }
 
-    main {
-      width: 88%;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 45px 0 80px;
-    }
+        .league-title {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 14px;
+            background: #171a20;
+            border-radius: 10px 10px 0 0;
+        }
 
-    .hero {
-      margin-bottom: 35px;
-    }
+        .match {
+            background: #111419;
+            border: 1px solid #242830;
+            padding: 18px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+        }
 
-    .hero small {
-      color: #777f89;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 11px;
-    }
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
 
-    .hero h1 {
-      font-size: 42px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
+        .team {
+            font-size: 17px;
+            font-weight: bold;
+            width: 40%;
+        }
 
-    .hero p {
-      color: #858c96;
-      max-width: 650px;
-      line-height: 1.6;
-    }
+        .away {
+            text-align: right;
+        }
 
-    .filters {
-      display: flex;
-      gap: 12px;
-      margin: 30px 0;
-      flex-wrap: wrap;
-    }
+        .time {
+            color: #8f96a3;
+            white-space: nowrap;
+        }
 
-    .filter {
-      background: #15181d;
-      border: 1px solid #272c33;
-      color: #b9bec6;
-      padding: 12px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-    }
+        .odds {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
 
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 35px 0 18px;
-    }
+        .odd {
+            background: #1b1f26;
+            padding: 9px 12px;
+            border-radius: 7px;
+            font-size: 13px;
+        }
 
-    .section-title h2 {
-      font-size: 20px;
-    }
+        .odd span {
+            color: #8f96a3;
+            margin-right: 5px;
+        }
 
-    .section-title span {
-      color: #737a84;
-      font-size: 12px;
-    }
+        .loading,
+        .error,
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #8f96a3;
+        }
 
-    .games {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-      gap: 18px;
-    }
+        @media (max-width: 600px) {
+            .teams {
+                flex-direction: column;
+                align-items: stretch;
+            }
 
-    .game {
-      background: #121519;
-      border: 1px solid #242930;
-      border-radius: 14px;
-      padding: 22px;
-      transition: 0.2s;
-    }
+            .team,
+            .away {
+                width: 100%;
+                text-align: center;
+            }
 
-    .game:hover {
-      border-color: #414852;
-      transform: translateY(-2px);
-    }
-
-    .league {
-      color: #777f89;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 18px;
-    }
-
-    .teams {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 22px;
-    }
-
-    .team {
-      font-size: 17px;
-      font-weight: 600;
-    }
-
-    .vs {
-      color: #626a74;
-      font-size: 12px;
-    }
-
-    .time {
-      color: #b8bec7;
-      font-size: 12px;
-      margin-bottom: 15px;
-    }
-
-    .odds {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 7px;
-      margin-bottom: 20px;
-    }
-
-    .odd {
-      background: #191d22;
-      border-radius: 7px;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .odd label {
-      display: block;
-      color: #6f7781;
-      font-size: 10px;
-      margin-bottom: 4px;
-    }
-
-    .odd strong {
-      font-size: 14px;
-    }
-
-    .analysis {
-      border-top: 1px solid #252a31;
-      padding-top: 18px;
-    }
-
-    .analysis-title {
-      color: #858d97;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 13px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .stat {
-      background: #171a1f;
-      padding: 12px 7px;
-      text-align: center;
-      border-radius: 7px;
-    }
-
-    .stat span {
-      display: block;
-      color: #727a84;
-      font-size: 10px;
-      margin-bottom: 5px;
-    }
-
-    .stat strong {
-      font-size: 16px;
-    }
-
-    .prediction {
-      margin-top: 15px;
-      background: #191d22;
-      border-radius: 8px;
-      padding: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .prediction small {
-      color: #707883;
-      display: block;
-      font-size: 9px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .prediction strong {
-      font-size: 15px;
-    }
-
-    .confidence {
-      text-align: right;
-    }
-
-    .confidence strong {
-      font-size: 12px;
-    }
-
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin: 35px 0;
-    }
-
-    .metric {
-      background: #121519;
-      border: 1px solid #242930;
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .metric span {
-      color: #737b85;
-      font-size: 11px;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .metric strong {
-      font-size: 26px;
-    }
-
-    footer {
-      border-top: 1px solid #20242a;
-      padding: 25px 6%;
-      color: #555d67;
-      font-size: 11px;
-      text-align: center;
-    }
-
-    @media (max-width: 800px) {
-      header {
-        padding: 0 5%;
-      }
-
-      nav {
-        display: none;
-      }
-
-      main {
-        width: 92%;
-        padding-top: 30px;
-      }
-
-      .hero h1 {
-        font-size: 32px;
-      }
-
-      .dashboard {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-  </style>
+            .time {
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">PROGNOZ</div>
-
-  <nav>
-    <a href="#">Bu gün</a>
-    <a href="#">Liqalar</a>
-    <a href="#">Analiz</a>
-    <a href="#">Nəticələr</a>
-  </nav>
+    <h1>PROGNOZ</h1>
+    <div class="date" id="date">Yüklənir...</div>
 </header>
 
-<main>
+<div class="container" id="matches">
+    <div class="loading">Oyunlar yüklənir...</div>
+</div>
 
-  <section class="hero">
-    <small>Football Intelligence</small>
-    <h1>Bugünkü proqnozlar</h1>
-    <p>
-      Misli əmsalları, əmsal hərəkətləri və tarixi nəticələr
-      əsasında statistik futbol analiz sistemi.
-    </p>
-  </section>
+<script>
 
-  <div class="dashboard">
-    <div class="metric">
-      <span>ANALİZ EDİLƏN OYUN</span>
-      <strong>—</strong>
-    </div>
+async function loadMatches() {
 
-    <div class="metric">
-      <span>ORT. ACCURACY</span>
-      <strong>—</strong>
-    </div>
+    const container = document.getElementById("matches");
 
-    <div class="metric">
-      <span>TOP PROQNOZ</span>
-      <strong>—</strong>
-    </div>
+    try {
 
-    <div class="metric">
-      <span>ƏMSAL SNAPSHOT</span>
-      <strong>5 dəq</strong>
-    </div>
-  </div>
+        const response = await fetch("./data.json");
 
-  <div class="filters">
-    <div class="filter">📅 12 Sentyabr 2026</div>
-    <div class="filter">Bütün liqalar</div>
-    <div class="filter">Bütün marketlər</div>
-  </div>
+        if (!response.ok) {
+            throw new Error("data.json tapılmadı");
+        }
 
-  <div class="section-title">
-    <h2>Bugünkü oyunlar</h2>
-    <span>Canlı database analizi</span>
-  </div>
+        const data = await response.json();
 
-  <section class="games">
+        document.getElementById("date").textContent =
+            data.date + " • " + data.match_count + " oyun";
 
-    <article class="game">
+        if (!data.matches || data.matches.length === 0) {
 
-      <div class="league">Premier League</div>
+            container.innerHTML =
+                '<div class="empty">Bu tarix üçün oyun yoxdur.</div>';
 
-      <div class="time">19:30</div>
+            return;
+        }
 
-      <div class="teams">
-        <div class="team">Arsenal</div>
-        <div class="vs">VS</div>
-        <div class="team">Chelsea</div>
-      </div>
+        const leagues = {};
 
-      <div class="odds">
-        <div class="odd">
-          <label>1</label>
-          <strong>1.72</strong>
-        </div>
+        data.matches.forEach(match => {
 
-        <div class="odd">
-          <label>X</label>
-          <strong>3.60</strong>
-        </div>
+            if (!leagues[match.league]) {
+                leagues[match.league] = [];
+            }
 
-        <div class="odd">
-          <label>2</label>
-          <strong>4.80</strong>
-        </div>
-      </div>
+            leagues[match.league].push(match);
 
-      <div class="analysis">
+        });
 
-        <div class="analysis-title">Statistik analiz</div>
+        container.innerHTML = "";
 
-        <div class="stats">
-          <div class="stat">
-            <span>HOME</span>
-            <strong>64%</strong>
-          </div>
+        Object.keys(leagues).forEach(leagueName => {
 
-          <div class="stat">
-            <span>DRAW</span>
-            <strong>21%</strong>
-          </div>
+            const leagueDiv = document.createElement("div");
 
-          <div class="stat">
-            <span>AWAY</span>
-            <strong>15%</strong>
-          </div>
-        </div>
+            leagueDiv.className = "league";
 
-        <div class="prediction">
-          <div>
-            <small>PROQNOZ</small>
-            <strong>Arsenal qələbə</strong>
-          </div>
+            leagueDiv.innerHTML = `
+                <div class="league-title">
+                    ${leagueName}
+                </div>
+            `;
 
-          <div class="confidence">
-            <small>CONFIDENCE</small>
-            <strong>HIGH</strong>
-          </div>
-        </div>
+            leagues[leagueName].forEach(match => {
 
-      </div>
-    </article>
+                const matchDiv = document.createElement("div");
 
+                matchDiv.className = "match";
 
-    <article class="game">
+                const date = new Date(match.kickoff);
 
-      <div class="league">La Liga</div>
+                const time = date.toLocaleTimeString(
+                    "az-AZ",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                );
 
-      <div class="time">22:00</div>
+                let oddsHTML = "";
 
-      <div class="teams">
-        <div class="team">Barcelona</div>
-        <div class="vs">VS</div>
-        <div class="team">Sevilla</div>
-      </div>
+                if (match.odds && match.odds.length > 0) {
 
-      <div class="odds">
-        <div class="odd">
-          <label>1</label>
-          <strong>1.45</strong>
-        </div>
+                    const latest = {};
 
-        <div class="odd">
-          <label>X</label>
-          <strong>4.60</strong>
-        </div>
+                    match.odds.forEach(odd => {
 
-        <div class="odd">
-          <label>2</label>
-          <strong>6.80</strong>
-        </div>
-      </div>
+                        const key =
+                            odd.market + "|" + odd.selection;
 
-      <div class="analysis">
+                        latest[key] = odd;
 
-        <div class="analysis-title">Statistik analiz</div>
+                    });
 
-        <div class="stats">
-          <div class="stat">
-            <span>HOME</span>
-            <strong>—</strong>
-          </div>
+                    Object.values(latest).forEach(odd => {
 
-          <div class="stat">
-            <span>DRAW</span>
-            <strong>—</strong>
-          </div>
+                        oddsHTML += `
+                            <div class="odd">
+                                <span>${odd.selection}</span>
+                                <b>${Number(odd.odds).toFixed(2)}</b>
+                            </div>
+                        `;
 
-          <div class="stat">
-            <span>AWAY</span>
-            <strong>—</strong>
-          </div>
-        </div>
+                    });
 
-        <div class="prediction">
-          <div>
-            <small>PROQNOZ</small>
-            <strong>Analiz gözlənilir</strong>
-          </div>
+                }
 
-          <div class="confidence">
-            <small>CONFIDENCE</small>
-            <strong>—</strong>
-          </div>
-        </div>
+                matchDiv.innerHTML = `
+                    <div class="teams">
 
-      </div>
-    </article>
+                        <div class="team">
+                            ${match.home_team}
+                        </div>
 
+                        <div class="time">
+                            ${time}
+                        </div>
 
-    <article class="game">
+                        <div class="team away">
+                            ${match.away_team}
+                        </div>
 
-      <div class="league">Bundesliga</div>
+                    </div>
 
-      <div class="time">20:30</div>
+                    <div class="odds">
+                        ${oddsHTML}
+                    </div>
+                `;
 
-      <div class="teams">
-        <div class="team">Bayern</div>
-        <div class="vs">VS</div>
-        <div class="team">Dortmund</div>
-      </div>
+                leagueDiv.appendChild(matchDiv);
 
-      <div class="odds">
-        <div class="odd">
-          <label>1</label>
-          <strong>1.58</strong>
-        </div>
+            });
 
-        <div class="odd">
-          <label>X</label>
-          <strong>4.20</strong>
-        </div>
+            container.appendChild(leagueDiv);
 
-        <div class="odd">
-          <label>2</label>
-          <strong>5.10</strong>
-        </div>
-      </div>
+        });
 
-      <div class="analysis">
+    } catch (error) {
 
-        <div class="analysis-title">Statistik analiz</div>
+        console.error(error);
 
-        <div class="stats">
-          <div class="stat">
-            <span>HOME</span>
-            <strong>—</strong>
-          </div>
+        container.innerHTML = `
+            <div class="error">
+                Oyunlar yüklənmədi.<br><br>
+                ${error.message}
+            </div>
+        `;
+    }
+}
 
-          <div class="stat">
-            <span>DRAW</span>
-            <strong>—</strong>
-          </div>
+loadMatches();
 
-          <div class="stat">
-            <span>AWAY</span>
-            <strong>—</strong>
-          </div>
-        </div>
-
-        <div class="prediction">
-          <div>
-            <small>PROQNOZ</small>
-            <strong>Analiz gözlənilir</strong>
-          </div>
-
-          <div class="confidence">
-            <small>CONFIDENCE</small>
-            <strong>—</strong>
-          </div>
-        </div>
-
-      </div>
-    </article>
-
-  </section>
-
-</main>
-
-<footer>
-  PROGNOZ © 2026 — Statistical Football Analysis
-</footer>
+</script>
 
 </body>
 </html>
